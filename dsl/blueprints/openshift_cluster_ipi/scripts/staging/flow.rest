@@ -1,0 +1,33 @@
+
+Category: AppType, AppTier
+Category_Value: Openshift
+
+### Create Openshift Category Value with AppType Category
+PUT https://{{pc_ip}}:9440/api/nutanix/v3/categories/AppType/Openshift
+Authorization: Basic {{basic_auth_token}}
+
+{"value": "Openshift","description":"All Openshift VMs"}
+
+### Create Openshift_Controlplane Category Value with AppTier Category
+PUT https://{{pc_ip}}:9440/api/nutanix/v3/categories/AppTier/Openshift_Controlplane
+Authorization: Basic {{basic_auth_token}}
+
+{"value": "Openshift_Controlplane","description":"Openshift Controlplane"}
+
+### Create Openshift_Infrastructure Category Value with AppTier Category
+PUT https://{{pc_ip}}:9440/api/nutanix/v3/categories/AppTier/Openshift_Infrastructure
+Authorization: Basic {{basic_auth_token}}
+
+{"value": "Openshift_Infrastructure","description":"Openshift Infrastructure"}
+
+### Create Openshift_Infrastructure Category Value with AppTier Category
+PUT https://{{pc_ip}}:9440/api/nutanix/v3/categories/AppTier/Openshift_Compute
+Authorization: Basic {{basic_auth_token}}
+
+{"value": "Openshift_Compute","description":"Openshift Compute"}
+
+### Create Kubernetes Services
+
+### Create Network Security Policy - Inbound/Outbound Policies & 
+
+### Map VMs to Categories

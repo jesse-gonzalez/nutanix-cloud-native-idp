@@ -1,0 +1,20 @@
+#cloud-config
+users:
+  - default
+  - name: @@{Nutanix.username}@@
+    shell: /bin/bash
+    homedir: /home/@@{Nutanix.username}@@
+    ssh-authorized-keys:
+      - @@{nutanix_public_key}@@
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    lock_passwd: false
+ssh_pwauth: false
+fqdn: @@{name}@@.@@{domain_name}@@
+manage_etc_hosts: true
+hostname: @@{name}@@
+write_files:
+  - path: /etc/sysctl.d/10-disable-ipv6.conf
+    permissions: 0644
+    owner: root
+    content: |
+      net.ipv6.conf.eth0.disable_ipv6 = 1
