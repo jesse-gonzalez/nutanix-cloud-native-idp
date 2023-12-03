@@ -24,7 +24,7 @@ jobs:
           set -e
 
           # Update this based on your image name and the path of the .devcontainer folder in your repository
-          IMAGE_NAME="cloud-native-calm-utils"
+          IMAGE_NAME="nutanix-cloud-native-utils"
           IMAGE_REPOSITORY="$(echo "ghcr.io/${{ github.repository_owner }}/${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')"
 
           # [Optional] Enable buildkit, set output to plain text for logging
