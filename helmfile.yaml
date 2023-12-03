@@ -1,0 +1,208 @@
+---
+environments:
+  {{ requiredEnv "ENVIRONMENT" }}:
+    secrets:
+    - config/{{ requiredEnv "ENVIRONMENT" }}/secrets.yaml
+
+---
+repositories:
+
+  - name: cilium
+    url: https://helm.cilium.io/
+
+  - name: projectcalico
+    url: https://projectcalico.docs.tigera.io/charts
+
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+
+  - name: jetstack
+    url: https://charts.jetstack.io
+
+  - name: nutanix
+    url: https://nutanix.github.io/helm/
+
+releases:
+
+  - name: cilium
+    namespace: kube-system
+    chart: cilium/cilium
+    version: 1.10.5
+    installed: true
+    values:
+    - nodeinit:
+        enabled: true
+      kubeProxyReplacement: partial
+      hostServices:
+        enabled: false
+      externalIPs:
+        enabled: true
+      nodePort:
+        enabled: true
+      hostPort:
+        enabled: true
+      cluster:
+        name: '{{ requiredEnv "ENVIRONMENT" }}'
+        ##id: '{requiredEnv "KIND_MULTI_CLUSTER_ID" }'
+
+  - name: calico
+    namespace: tigera-operator 
+    chart: projectcalico/tigera-operator
+    version: 3.25.1
+    installed: true
+    values:
+    - installation:
+        cni:
+          type: Calico
+        calicoNetwork:
+          ipPools:
+            - blockSize: 26
+              cidr: 172.20.0.0/16
+              encapsulation: VXLANCrossSubnet
+              natOutgoing: Enabled
+              nodeSelector: all()
+    
+    ## The RPF check is not enforced in Kind nodes. Thus, we need to disable the Calico check by setting an environment variable in the calico-node DaemonSet
+    hooks:
+    - events: ["postsync"]
+      showlogs: true
+      command: "sh" 
+      args:
+      - -exc
+      - |
+        while [[ -z $(kubectl get pod -l app.kubernetes.io/name=calico-node -n calico-system 2>/dev/null) ]]; do
+          echo "still waiting for pods with a label of calico-node to be created"
+          sleep 1
+        done
+        kubectl set env daemonset/calico-node FELIX_IGNORELOOSERPF=true -n calico-system
+
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: v1.5.1
+    installed: true
+    values:
+      - installCRDs: true
+    # Need to create self-signed cluster issuer, root-ca certificate / key and secondary issuer from root-ca generated secret for downstream signing of tls certs
+    hooks:
+    - events: ["postsync"]
+      showlogs: true
+      command: "sh" 
+      args: 
+      - -exc
+      - |
+        cat <<EOF | kubectl apply -f -
+        apiVersion: cert-manager.io/v1
+        kind: ClusterIssuer
+        metadata:
+          name: selfsigned-cluster-issuer
+        spec:
+          selfSigned: {}
+        ---
+        apiVersion: cert-manager.io/v1
+        kind: Certificate
+        metadata:
+          name: selfsigned-ca
+          namespace: cert-manager
+        spec:
+          isCA: true
+          secretName: selfsigned-ca-tls
+          commonName: {{ requiredEnv "ENVIRONMENT" }} SelfSigned Cert-Manager CA
+          usages:
+            - server auth
+            - client auth
+          privateKey:
+            algorithm: ECDSA
+            size: 256
+          issuerRef:
+            name: selfsigned-cluster-issuer
+            kind: ClusterIssuer
+            group: cert-manager.io
+        ---
+        apiVersion: cert-manager.io/v1
+        kind: ClusterIssuer
+        metadata:
+          name: selfsigned-ca-cluster-issuer
+        spec:
+          ca:
+            secretName: selfsigned-ca-tls
+        EOF
+
+  - name: ingress-nginx
+    namespace: ingress-nginx 
+    chart: ingress-nginx/ingress-nginx
+    version: 4.0.16
+    installed: true
+    values:
+      - rbac:
+          create: true
+      - controller:
+          replicaCount: 3
+          config:
+            proxy-body-size: 0
+            proxy-request-buffering: "off"
+            proxy-read-timeout: 1800
+            proxy-send-timeout: 1800
+            force-ssl-redirect: true
+          ingressClassResource:
+            default: true
+
+  - name: nutanix-csi-snapshot
+    namespace: ntnx-system
+    chart: nutanix/nutanix-csi-snapshot
+    version: 6.0.1
+    installed: true
+    values:
+      - tls:
+          renew: true
+          secretName: "snapshot-validation-webhook-cert"
+      - validationWebHook:
+          replica: 2
+
+  - name: nutanix-csi-storage
+    namespace: ntnx-system
+    chart: nutanix/nutanix-csi-storage
+    version: 2.6.3
+    installed: true
+    needs:
+    - ntnx-system/nutanix-csi-snapshot
+    values:
+      - volumeClass: true
+        volumeClassName: nutanix-volume
+        fileClass: true
+        fileClassName: nutanix-file
+        dynamicFileClass: true
+        dynamicFileClassName: nutanix-dynamicfile
+        defaultStorageClass: nutanix-volume
+        prismEndPoint: {{ requiredEnv "PE_CLUSTER_VIP" }}
+        username: {{ .Values.prism_element_user }}
+        password: {{ .Values.prism_element_password }}
+        secretName: ntnx-secret
+        createSecret: true
+        storageContainer: {{ requiredEnv "PE_STORAGE_CONTAINER" }}
+        fsType: xfs
+        networkSegmentation: false
+        lvmVolume: false
+        lvmDisks: 4
+        fileHost: {{ requiredEnv "NUTANIX_FILES_NFS_FQDN" }}
+        filePath: {{ requiredEnv "NUTANIX_FILES_NFS_EXPORT" }}
+        fileServerName: {{ requiredEnv "NUTANIX_FILES_NFS_SHORT" }}
+        kubeletDir: /var/lib/kubelet
+        kindtest: {{ requiredEnv "CSI_KINDTEST" }}
+
+# Default values to set for args along with dedicated keys that can be set by contributors, cli args take precedence over these.
+# In other words, unset values results in no flags passed to helm.
+# See the helm usage (helm SUBCOMMAND -h) for more info on default values when those flags aren't provided.
+helmDefaults:
+  # wait for k8s resources via --wait. (default false)
+  wait: true
+  # if set and --wait enabled, will wait until all Jobs have been completed before marking the release as successful. It will wait for as long as --timeout (default false, Implemented in Helm3.5)
+  waitForJobs: true
+  # time in seconds to wait for any individual Kubernetes operation (like Jobs for hooks, and waits on pod/pvc/svc/deployment readiness) (default 300)
+  timeout: 600
+  # forces resource update through delete/recreate if needed (default false)
+  force: false
+  # when using helm 3.2+, automatically create release namespaces if they do not exist (default true)
+  createNamespace: true
+  # if set, the installation process deletes the installation on failure. The --wait flag will be set automatically if --atomic is used
+  atomic: true

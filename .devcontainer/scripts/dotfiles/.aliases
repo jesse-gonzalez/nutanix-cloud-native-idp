@@ -1,0 +1,71 @@
+# General
+alias grep='grep --color'
+alias rm='rm -i'
+alias ..="cd .."
+
+# kubectl aliases
+alias k='kubectl'
+# alias kg='kubectl get'
+alias kga='kubectl get deploy,rc,pods,ing,svc,pv,pvc,cm,secrets'
+alias kgaw='kubectl get deploy,rc,pods,ing,svc,pv,pvc,cm,secrets -o wide'
+# alias kgcm='kubectl get configmap'
+alias kwl='watch kubectl get ing,svc,deploy,rc,pods,cm,secrets,pv,pvc -o wide'
+alias kwa='watch kubectl get all --show-labels -o wide'
+# alias kgds='kubectl get daemonset'
+# alias kgns='kubectl get namespaces'
+alias kgsc='kubectl get storageclasses.storage.k8s.io'
+alias kgpv='kubectl get pv'
+alias krmpv='kubectl delete pv'
+alias kgpvc='kubectl get pvc'
+alias krmpvc='kubectl delete pvc'
+# alias kgss='kubectl get statefulset'
+alias kgw='watch -n 1 kubectl get'
+
+complete -F __start_kubectl k
+complete -F __start_kubectl kg
+complete -F __start_kubectl kd
+complete -F __start_kubectl krm
+complete -F __start_kubectl kge
+complete -F __start_kubectl klo
+complete -F __start_kubectl kam
+complete -F __start_kubectl kex
+
+complete -F __start_kubectl kgpo
+complete -F __start_kubectl kgdep
+complete -F __start_kubectl kging
+complete -F __start_kubectl kgsvci
+complete -F __start_kubectl kgcm
+complete -F __start_kubectl kgsec
+complete -F __start_kubectl kgns
+complete -F __start_kubectl kgno
+complete -F __start_kubectl kgpv
+complete -F __start_kubectl kgpvc
+
+complete -F __start_kubectl krmpo
+complete -F __start_kubectl krmdep
+complete -F __start_kubectl krming
+complete -F __start_kubectl krmsvc
+complete -F __start_kubectl krmcm
+complete -F __start_kubectl krmsec
+complete -F __start_kubectl krmns
+complete -F __start_kubectl krmno
+complete -F __start_kubectl krmpv
+complete -F __start_kubectl krmpvc
+
+# karbon stuff
+alias karbon_refresh='make -C ~/Documents/demo-workspace/consulting-pracdev-service-kit-karbon'
+alias karbon_get_ips="kubectl describe nodes | egrep 'Hostname|InternalIP'"
+alias k8s_exec_bbox="kubectl run busybox --image=busybox --rm --restart=Never -it -- sh"
+alias k8s_run_bbox="kubectl run busybox --image=busybox --restart=Never -- sleep 6500"
+
+# general alias definitions
+alias ll='ls -althrF'
+alias la='ls -A'
+alias l='ls -lFha'
+alias h='history'
+
+# calicoctl alias to handle client and cluster version mismatches
+alias calicoctl='calicoctl --allow-version-mismatch'
+
+## docker aliases
+## alias gcloud="docker run --rm --volumes-from gcloud-config gcr.io/google.com/cloudsdktool/google-cloud-cli:alpine gcloud"

@@ -1,0 +1,39 @@
+## function to download kubeconfig yaml from rancher control plane and configure local context
+function download_rancher_cfg() {
+  RANCHER_MASTER_IP=$1
+  RANCHER_CLUSTER_TYPE=$2
+  CLUSTER_NAME=$3
+  SSH_USER=$4
+  # validate arg list
+  ARGS_LIST=($@)
+  if [ ${#ARGS_LIST[@]} -lt 3 ]; then
+     echo 'Example: download_rancher_cfg [rancher-master-ip] [rancher-cluster-type] [cluster-name] [optional-ssh-user]'
+     return
+  fi
+  # update known hosts files locally 
+  if [ -z "$(ssh-keygen -F $RANCHER_MASTER_IP)" ]; then
+    ssh-keyscan -H $RANCHER_MASTER_IP >> ~/.ssh/known_hosts
+  fi
+  # ssh into node, copy to location that rancher ssh user has access and subsequently copy to local ~/.kube dir
+  SSH_USER=${SSH_USER:-'rancher'}
+  ssh -C $SSH_USER@$RANCHER_MASTER_IP "cp /etc/rancher/$RANCHER_CLUSTER_TYPE/$RANCHER_CLUSTER_TYPE.yaml /tmp && chown $SSH_USER:$SSH_USER /tmp/$RANCHER_CLUSTER_TYPE.yaml"
+  scp $SSH_USER@$RANCHER_MASTER_IP:/tmp/$RANCHER_CLUSTER_TYPE.yaml ~/.kube/$CLUSTER_NAME.cfg
+  # replace cluster context info and local ip address
+  sed -i_bkup -e 's/default/'${CLUSTER_NAME}'/g' -e 's/127.0.0.1/'${RANCHER_MASTER_IP}'/g' ~/.kube/$CLUSTER_NAME.cfg
+  # validate
+  KUBECONFIG=~/.kube/$CLUSTER_NAME.cfg
+  kubectl get nodes
+}
+
+## function to set terminal title for bash or zsh
+function set_terminal_title() {                                                                                                                                
+  echo -en "\e]2;$@\a"                                                                                                                                         
+}
+
+## functions to manage git prompt
+function parse_git_dirty {
+  [[ $(git status --porcelain 2> /dev/null) ]] && echo "*"
+}
+function parse_git_branch {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/ (\1$(parse_git_dirty))/"
+}

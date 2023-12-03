@@ -1,0 +1,155 @@
+__pycache__
+.DS_Store
+.envrc.bkup
+.vault_pass
+
+# ignore local secrets dir
+.local/*
+.hidden/**
+
+# gitguardian cache
+.cache_ggshield
+
+# ignore anything under configs that's not templates
+config/*
+!config/templates
+!config/_common
+
+# ignore kubectl config files
+*.cfg
+
+# ignore temp junk
+_tmp
+tmp
+.todo
+.junk
+
+# MacOS
+## Ignore desktop services files.
+**/.DS_Store
+
+# HashiCorp Packer
+## Ignore pkrsvars.hcl files
+common.pkrvars.hcl
+vsphere.pkrvars.hcl
+## Ignore cache directories.
+packer_cache/
+## Ignore crash log files.
+crash.log
+## Ignore manifests
+**/manifests/*.json
+
+# HashiCorp Terraform
+## Ignore .terraform directories.
+**/.terraform/*
+## Ignore .tfstate files
+*.tfstate
+*.tfstate.*
+*.terraform.*
+tfplan.out
+## Ignore crash.log files.
+crash.log
+## Ignore .tfvars files, which are likely to contain sentitive data.
+*.tfvars
+## Ignore override files.
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+## Ignore Terraform CLI configuration files.
+.terraformrc
+terraform.rc
+## Ignore generated tfplans
+*.tfplan
+## other stuff found in teraform scripts
+**/*.tfvars
+**/*.log
+**/*.tfstate
+**/*.tfstate.backup
+**/.terraform
+**/.DS_Store
+**/.terraform.tfstate.lock.info
+**/*id_rsa*
+**/org_scripts
+**/*.txt
+**/go.mod
+**/go.sum
+**/.terraform.local.hcl
+.terraform.lock.hcl
+terraform/cert/*.key
+terraform/cert/*.crt
+
+## Ignore certificates files.
+**/*.cer
+**/*.crt
+**/*.p7b
+## Ignore public key files
+**/*.pub
+
+# Manifests
+## Ignore manifests directory.
+**/manifests/*.json
+**/manifest.son
+
+# Temp junk
+## Ignore temp directory
+temp/
+tmp/
+_tmp/
+
+# Configuration stuff
+config/**/.cache/**
+.local/**
+
+# ignore secrets / sops yaml file
+config/**/secrets.yaml.dec
+
+# ignore .kube
+.kube
+
+# ignore bin contents
+bin/**
+
+# Kubernetes
+**/*kubeconfig
+**/kube_config_cluster.yml
+
+# Visual Studio Code
+**/.vscode
+
+# Various
+**/*.pptx
+
+secrets.yaml
+secrets-**.yaml
+.env
+.sandbox
+
+## Packer Stuff
+secrets.linux.auto.pkrvars.hcl
+packer/manifest.json
+
+## devcontainer stuff
+devcontainer.env
+
+## cache for git repos
+.repo_cache
+
+## ansible navigator junk
+ansible-navigator.log
+*-artifact-*.json
+
+# ignore random staging / backup dirs and files
+site/
+.scratch
+.lock
+.cache
+.cheatsheets
+*.tar
+*.tar.gz
+.hidden
+*.cast
+*.log
+*.pem
+output/
+.vault_pass

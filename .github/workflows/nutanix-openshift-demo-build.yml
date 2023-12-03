@@ -1,0 +1,128 @@
+name: nutanix-openshift-demo-build
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - feat**
+      - bug**
+      - task**
+    paths:
+      - '.github/workflows/nutanix-openshift-demo-build.yaml'
+      - 'config/**'
+      - 'dsl/**'
+      - '.mk/**'
+      - 'Makefile'
+      - 'init_local_configs.sh'
+      - 'secrets.yaml.example'
+    tags:
+      - v*
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      deploy_environment:
+        description: 'What is target environment? i.e., kalm-main-11-4'
+        type: string
+        required: true
+      github_environment:
+        description: 'Github environment secrets store name.'
+        default: 'kalm-main-common'
+        type: environment
+        required: true
+      github_runner:
+        description: 'Github self-hosted runner label'
+        default: 'actions-runner-set'
+        type: string
+        required: true
+
+env:
+  ### Default environment to deploy and configure calm and openshift.
+  ENVIRONMENT_NAME: ${{ github.event.inputs.deploy_environment || 'kalm-main-11-4' }}
+
+concurrency: ${{ github.event.inputs.github_environment || 'kalm-main-ocp-cicd' }}
+
+jobs:
+  build-nutanix-openshift-cluster:
+    timeout-minutes: 240
+    if: github.event.pull_request.draft == false
+    ### runs-on environment should be different from ephemeral environment
+    runs-on: ${{ github.event.inputs.github_runner || 'actions-runner-set' }}
+    ### COMMON_SECRET for Github Environment should be updated appropriately
+    environment:
+      name: ${{ github.event.inputs.github_environment || 'kalm-main-ocp-cicd' }}
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/nutanix-openshift-utils:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GH_SECRET }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Staging Environment Secrets
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          mkdir -p .local/_common
+          echo "${{ secrets.NTNX_SSH_PRIVATE_KEY }}" > .local/_common/nutanix_key
+          echo "${{ secrets.NTNX_SSH_PUB_KEY }}" > .local/_common/nutanix_public_key
+          
+          cp ./secrets.yaml.example ./secrets.yaml
+
+          MOD_AWS_ACCESS_KEY_ID=$(echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | sed 's/\W/\\&/g')
+          sed -i "s/aws_access_key_id: .*/aws_access_key_id: $MOD_AWS_ACCESS_KEY_ID/g" ./secrets.yaml
+
+          MOD_AWS_ACCESS_KEY_SECRET=$(echo "${{ secrets.AWS_ACCESS_KEY_SECRET }}" | sed 's/\W/\\&/g')
+          sed -i "s/aws_access_key_secret: .*/aws_access_key_secret: $MOD_AWS_ACCESS_KEY_SECRET/g" ./secrets.yaml
+
+          MOD_OCP_PULL_SECRET_JSON=$(echo '${{ secrets.OCP_PULL_SECRET_JSON }}' | sed 's/\W/\\&/g')
+          sed -i "s/ocp_pull_secret_json: .*/ocp_pull_secret_json: '$MOD_OCP_PULL_SECRET_JSON'/g" ./secrets.yaml
+
+          MOD_OBJECTS_ACCESS_KEY=$(echo "${{ secrets.OBJECTS_ACCESS_KEY }}" | sed 's/\W/\\&/g')
+          sed -i "s/objects_access_key: .*/objects_access_key: $MOD_OBJECTS_ACCESS_KEY/g" ./secrets.yaml
+
+          MOD_OBJECTS_SECRET_KEY=$(echo "${{ secrets.OBJECTS_SECRET_KEY }}" | sed 's/\W/\\&/g')
+          sed -i "s/objects_secret_key: .*/objects_secret_key: $MOD_OBJECTS_SECRET_KEY/g" ./secrets.yaml
+
+          MOD_DOCKER_HUB_PASS=$(echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | sed 's/\W/\\&/g')
+          sed -i "s/docker_hub_user: .*/docker_hub_user: ${{ secrets.DOCKER_HUB_USER }}/g" ./secrets.yaml
+          sed -i "s/docker_hub_password: .*/docker_hub_password: $MOD_DOCKER_HUB_PASS/g" ./secrets.yaml
+
+          MOD_GH_SECRET=$(echo "${{ secrets.GH_SECRET }}" | sed 's/\W/\\&/g')
+          sed -i "s/github_user: .*/github_user: ${{ secrets.GH_USER }}/g" ./secrets.yaml
+          sed -i "s/github_password: .*/github_password: $MOD_GH_SECRET/g" ./secrets.yaml
+          sed -i "s/github_email: .*/github_email: ${{ secrets.GH_EMAIL }}/g" ./secrets.yaml
+
+          MOD_COMMON_SECRET=$(echo "${{ secrets.COMMON_SECRET }}" | sed 's/\W/\\&/g')
+          sed -i "s/required_secret/$MOD_COMMON_SECRET/g" ./secrets.yaml
+          cat ./secrets.yaml
+
+      - name: Initialize Environment Configs
+        run: |
+          ./init_local_configs.sh .local/_common/nutanix_key .local/_common/nutanix_public_key $ENVIRONMENT_NAME true
+          make print-vars ENVIRONMENT=$ENVIRONMENT_NAME
+          env
+      - name: Initialize DSL Config
+        run: make init-dsl-config ENVIRONMENT=$ENVIRONMENT_NAME
+      - name: Cleanup Existing Artifacts
+        run: make bootstrap-reset-all ENVIRONMENT=$ENVIRONMENT_NAME
+        continue-on-error: true
+      - name: Provision Linux Bastion Host Endpoint
+        run: make init-bastion-host-svm ENVIRONMENT=$ENVIRONMENT_NAME
+      - name: Provision Calm Endpoints & Runbook Scenarios
+        run: make init-runbook-infra ENVIRONMENT=$ENVIRONMENT_NAME
+      - name: Compile & Create Openshift 4.x Cluster Blueprint
+        run: make create-dsl-bps DSL_BP=openshift_cluster_ipi ENVIRONMENT=$ENVIRONMENT_NAME
+      - name: Launch Openshift 4.x Cluster on AHV via IPI
+        run: make launch-dsl-bps DSL_BP=openshift_cluster_ipi ENVIRONMENT=$ENVIRONMENT_NAME
+      - name: Publish Openshift Cluster 4.x Blueprint 
+        run: make unpublish-dsl-bps publish-new-dsl-bps DSL_BP=openshift_cluster_ipi ENVIRONMENT=$ENVIRONMENT_NAME
+        continue-on-error: true

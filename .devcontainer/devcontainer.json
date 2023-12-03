@@ -1,0 +1,40 @@
+{
+  "build": {
+    //"context": "..",
+    "dockerfile": "Dockerfile"
+  },
+
+  // create .local/_common and secrets.yaml if it doesn't exist
+  "initializeCommand": "mkdir -p .local/_common && [[ -f ./secrets.yaml ]] || cp ./secrets.yaml.example ./secrets.yaml",
+
+  "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
+
+  "mounts": [
+    // use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
+    "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock"
+    // Mounts the local dir to root calm dir
+    // "type=bind,source=${localWorkspaceFolder}/.local,target=/root/.calm"
+  ],
+
+  "workspaceMount": "source=${localWorkspaceFolder}/,target=/dsl-workspace,type=bind",
+  "workspaceFolder": "/dsl-workspace",
+
+  "containerEnv": {
+   "MOD_COMMON_SECRET": "$( echo ${containerEnv:COMMON_SECRET} | sed 's/\\W/\\\\&/g' )"
+  },
+
+  "postCreateCommand": "sed -i \"s/required_secret/${containerEnv:MOD_COMMON_SECRET}/g\" ./secrets.yaml",
+  "postStartCommand": "./init_local_configs.sh ${containerEnv:NTNX_SSH_PRIVATE_KEY} ${containerEnv:NTNX_SSH_PUB_KEY} ${containerEnv:ENVIRONMENT} false"
+
+  // Set *default* container specific settings.json values on container create.
+  "settings": {
+    "terminal.integrated.shell.linux": "bash",
+    "terminal.integrated.profiles.linux": {
+      "bash (container default)": {
+        "path": "/usr/bin/bash",
+        "overrideName": true
+      }
+    }
+  }
+
+}
