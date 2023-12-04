@@ -1,4 +1,4 @@
-name: cloud-native-calm-builds
+name: nutanix-cloud-native-idp-builds
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ on:
       - bug**
       - task**
     paths:
-      - '.github/workflows/cloud-native-calm-build.yaml'
+      - '.github/workflows/nutanix-cloud-native-idp-build.yaml'
       - 'config/**'
       - 'dsl/**'
       - '.mk/**'
