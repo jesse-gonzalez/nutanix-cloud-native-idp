@@ -2,7 +2,6 @@ REQUIRED_TOOLS_LIST += oc openshift-install
 
 .PHONY: download-ocp-creds
 set-ocp-creds: #### logs into ocp api for target environment.
-	make set-bastion-host
 	@export OCP_ADMIN_PASS=$(shell ssh -i .local/${ENVIRONMENT}/nutanix_key nutanix@${BASTION_HOST_SVM_IP} -C "cat .local/${OCP_CLUSTER_NAME}/.build-cache/auth/kubeadmin-password" ); \
 		oc login --insecure-skip-tls-verify=true -u kubeadmin -p $$OCP_ADMIN_PASS ${OCP_API_URL}; \
 		kubectl config view --raw --minify > ${HOME}/.kube/${OCP_CLUSTER_NAME}.cfg;
