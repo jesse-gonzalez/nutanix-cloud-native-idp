@@ -6,6 +6,14 @@ WILDCARD_INGRESS_DNS_FQDN=@@{wildcard_ingress_dns_fqdn}@@
 NIPIO_INGRESS_DOMAIN=@@{nipio_ingress_domain}@@
 PRIMARY_KASTEN_K8S_CLUSTER=@@{primary_kasten_k8s_cluster}@@
 
+# this will install the argocd command line utility
+NAMESPACE=kasten-io
+INSTANCE_NAME=k10
+K8S_CLUSTER_NAME=kalm-main-15-4
+WILDCARD_INGRESS_DNS_FQDN=kalm-main-15-4.ntnxlab.local
+NIPIO_INGRESS_DOMAIN=10.38.15.209.nip.io
+PRIMARY_KASTEN_K8S_CLUSTER=kalm-main-15-4
+
 export KUBECONFIG=$HOME/${K8S_CLUSTER_NAME}_${INSTANCE_NAME}.cfg
 
 # get primary cluster kubeconfig
@@ -26,6 +34,7 @@ then
   k10multicluster setup-primary \
       --context=${PRIMARY_KASTEN_K8S_CLUSTER}-context \
       --name=${PRIMARY_KASTEN_K8S_CLUSTER} \
+      --ingress=https://k10.${NIPIO_INGRESS_DOMAIN}/k10 \
       --k10-release-name=k10 \
       --k10-namespace=kasten-io \
       --kubeconfig=$HOME/${PRIMARY_KASTEN_K8S_CLUSTER}.cfg \
