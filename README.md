@@ -1,6 +1,6 @@
 [![nutanix-cloud-native-idp-builds](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/nutanix-cloud-native-idp-build.yml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/nutanix-cloud-native-idp-build.yml)
 [![devcontainer-cicd-build](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/devcontainer-cicd-build.yml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/devcontainer-cicd-build.yml) [![git-guardian-security-checks](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/gitguardian.yaml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/gitguardian.yaml)
-[![ntnx-ocp-cloud-native-build](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/ntnx-ocp-cloud-native-build.yml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/ntnx-ocp-cloud-native-build.yml)
+[![nutanix-openshift-demo-build](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/nutanix-openshift-demo-build.yml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/nutanix-openshift-demo-build.yml)
 
 # Cloud-Native with Nutanix Self-Service and Kubernetes
 
