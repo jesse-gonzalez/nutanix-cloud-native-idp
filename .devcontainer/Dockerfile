@@ -1,5 +1,5 @@
 # Download Calm DSL latest from hub.docker.com
-FROM ntnx/calm-dsl:v3.5.2
+FROM ntnx/calm-dsl:v3.4.0
 
 LABEL org.opencontainers.image.title="nutanix-cloud-native-utils"
 LABEL org.opencontainers.image.description="Cloud Native Utils built on top of Nutanix Calm DSL BASE"
@@ -43,7 +43,7 @@ RUN apk update \
     && rm -rf /var/cache/apk/*
 
 ## configure azure-cli, ansible-navigator and other pip utils
-RUN apk add --update --no-cache -q --virtual=build gcc musl-dev python3-dev libffi-dev openssl-dev cargo oniguruma-dev \
+RUN apk add --no-cache -q --virtual=build gcc musl-dev python3-dev libffi-dev openssl-dev cargo oniguruma-dev \
     && ln -sf python3 /usr/bin/python \
     && python3 -m ensurepip \
     && pip3 install --upgrade pip setuptools \

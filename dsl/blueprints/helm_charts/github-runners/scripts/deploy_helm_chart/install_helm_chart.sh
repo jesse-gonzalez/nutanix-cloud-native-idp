@@ -4,8 +4,18 @@ K8S_CLUSTER_NAME=@@{k8s_cluster_name}@@
 
 export KUBECONFIG=~/${K8S_CLUSTER_NAME}_${INSTANCE_NAME}.cfg
 
-#GITHUB_CONFIG_URL="https://github.com/jesse-gonzalez/cloud-native-calm"
-GITHUB_CONFIG_URL="@@{github_repo_url}@@"
+#GITHUB_REPO_URL="https://github.com/jesse-gonzalez/nutanix-cloud-native-idp.git"
+GITHUB_REPO_URL="@@{github_repo_url}@@"
+
+GITHUB_REPO_URL_WO_SUFFIX="${GITHUB_REPO_URL%.*}"
+GITHUB_REPO_ORG="$(basename "${GITHUB_REPO_URL_WO_SUFFIX}")"
+GITHUB_REPO_NAME="$(basename "${GITHUB_REPO_URL_WO_SUFFIX%/${GITHUB_REPO_ORG}}")"
+GITHUB_REPO_SLUG="$GITHUB_REPO_NAME/$GITHUB_REPO_ORG"
+
+GITHUB_CONFIG_URL=$GITHUB_REPO_URL_WO_SUFFIX
+
+echo $GITHUB_CONFIG_URL
+
 GITHUB_PAT=@@{GitHub User.secret}@@
 
 ## install github actions runner controller and scale set

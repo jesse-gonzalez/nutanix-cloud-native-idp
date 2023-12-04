@@ -4,7 +4,7 @@
 
 __OpenShift Connectivity:__
 
-[https://multicloud-console.apps.@@{ocp_hub_cluster_name}@@.@@{ocp_base_domain}@@](https://multicloud-console.apps.@@{ocp_hub_cluster_name}@@.@@{ocp_base_domain}@@)
+[https://console-openshift-console.apps.@@{ocp_hub_cluster_name}@@.@@{ocp_base_domain}@@](https://console-openshift-console.apps.@@{ocp_hub_cluster_name}@@.@@{ocp_base_domain}@@)
 
 
 ```bash
