@@ -74,15 +74,23 @@ jobs:
           mkdir -p .local/_common
           echo "${{ secrets.NTNX_SSH_PRIVATE_KEY }}" > .local/_common/nutanix_key
           echo "${{ secrets.NTNX_SSH_PUB_KEY }}" > .local/_common/nutanix_public_key
+          
           cp ./secrets.yaml.example ./secrets.yaml
 
+          MOD_AWS_ACCESS_KEY_ID=$(echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | sed 's/\W/\\&/g')
+          sed -i "s/aws_access_key_id: .*/aws_access_key_id: $MOD_AWS_ACCESS_KEY_ID/g" ./secrets.yaml
+
+          MOD_AWS_ACCESS_KEY_SECRET=$(echo "${{ secrets.AWS_ACCESS_KEY_SECRET }}" | sed 's/\W/\\&/g')
+          sed -i "s/aws_access_key_secret: .*/aws_access_key_secret: $MOD_AWS_ACCESS_KEY_SECRET/g" ./secrets.yaml
+
+          MOD_OCP_PULL_SECRET_JSON=$(echo '${{ secrets.OCP_PULL_SECRET_JSON }}' | sed 's/\W/\\&/g')
+          sed -i "s/ocp_pull_secret_json: .*/ocp_pull_secret_json: '$MOD_OCP_PULL_SECRET_JSON'/g" ./secrets.yaml
+
           MOD_OBJECTS_ACCESS_KEY=$(echo "${{ secrets.OBJECTS_ACCESS_KEY }}" | sed 's/\W/\\&/g')
-          sed -i "s/objects_access_key: .*/objects_access_key: ${{ secrets.OBJECTS_ACCESS_KEY }}/g" ./secrets.yaml
+          sed -i "s/objects_access_key: .*/objects_access_key: $MOD_OBJECTS_ACCESS_KEY/g" ./secrets.yaml
 
           MOD_OBJECTS_SECRET_KEY=$(echo "${{ secrets.OBJECTS_SECRET_KEY }}" | sed 's/\W/\\&/g')
-          sed -i "s/objects_secret_key: .*/objects_secret_key: ${{ secrets.OBJECTS_SECRET_KEY }}/g" ./secrets.yaml
-
-          sed -i "s/docker_hub_password: .*/docker_hub_password: $MOD_DOCKER_HUB_PASS/g" ./secrets.yaml
+          sed -i "s/objects_secret_key: .*/objects_secret_key: $MOD_OBJECTS_SECRET_KEY/g" ./secrets.yaml
 
           MOD_DOCKER_HUB_PASS=$(echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | sed 's/\W/\\&/g')
           sed -i "s/docker_hub_user: .*/docker_hub_user: ${{ secrets.DOCKER_HUB_USER }}/g" ./secrets.yaml
@@ -95,6 +103,7 @@ jobs:
 
           MOD_COMMON_SECRET=$(echo "${{ secrets.COMMON_SECRET }}" | sed 's/\W/\\&/g')
           sed -i "s/required_secret/$MOD_COMMON_SECRET/g" ./secrets.yaml
+          cat ./secrets.yaml
 
       - name: Initialize Environment Configs
         run: |

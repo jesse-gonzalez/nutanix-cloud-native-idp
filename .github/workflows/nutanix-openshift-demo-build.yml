@@ -59,7 +59,7 @@ jobs:
     environment:
       name: ${{ github.event.inputs.github_environment || 'kalm-main-ocp-cicd' }}
     container:
-      image: ghcr.io/${{ github.repository_owner }}/nutanix-openshift-utils:latest
+      image: ghcr.io/${{ github.repository_owner }}/nutanix-cloud-native-utils:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GH_SECRET }}
