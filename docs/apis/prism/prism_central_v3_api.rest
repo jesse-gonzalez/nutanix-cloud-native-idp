@@ -1,0 +1,162 @@
+## 1. .rest files require rest client vscode extension.
+## 2. get basic auth token `echo -n admin:nutanix/4u | base64`
+## 3. update rest-client.enviornmentVariables and rest-client.defaultHeaders in vscode settings.json
+# "rest-client.environmentVariables": {
+#   "kalm-main-11-1": {
+#     "pe_ip": "10.38.11.7",
+#     "pc_ip": "10.38.11.9",
+#     "basic_auth_token": "admin:nutanix/4u",
+#     "karbon_cluster_name": "kalm-main-11-1"
+#   }
+# },
+# "rest-client.defaultHeaders": {
+#    "User-Agent": "vscode-restclient",
+#    "Content-Type": "application/json"
+# },
+## 4. easily switch between environments via command palette Rest Client: Switch Environment  (ctrl-shift-P)
+## 5. send request via command palette option Rest Client: Send Request (ctrl-shift-P)
+
+# - v3.0 Options
+# - categories
+# - vm_recovery_points
+# - portal_services
+# - tasks
+# - network_security_rules
+# - layer2_stretch
+# - cloud
+# - remote_connections
+# - whatif
+# - storage_policies
+# - reports
+# - identity_providers
+# - search
+# - action_templates
+# - virtual_network
+# - oauth
+# - ovas
+# - vpn_connection
+# - service_groups
+# - action_rules
+# - app_tasks
+# - blueprint
+# - ngt
+# - directory_services
+# - vm_host_affinity_legacy_policies
+# - vms
+# - projects
+# - default
+# - underlay_subnet
+# - prism_central
+# - routing_policies
+# - image_placement_policies
+# - remote_syslog_servers
+# - accounts
+# - volume_groups
+# - direct_connect_virtual_interfaces
+# - marketplace_item
+# - ipfix_exporters
+# - entity_sync_rules
+# - vm_host_affinity_policies
+# - services
+# - recovery_plans
+# - vpn_gateway
+# - roles
+# - datacenter
+# - action_types
+# - mh_vms
+# - favorites
+# - audits
+# - access_control_policies
+# - protection_rules
+# - images
+# - clusters
+# - groups
+# - streaming_policy
+# - idempotence_identifiers
+# - action_trigger_types
+# - blackouts
+# - action_rule_results
+# - recovery_points
+# - rack
+# - vpc
+# - address_groups
+# - billing
+# - network_device
+# - subnets
+# - apps
+# - availability_zones
+# - ngt_policies
+# - environments
+# - permissions
+# - remote_syslog_modules
+# - alerts
+# - network_function_chains
+# - ssh_user
+# - disks
+# - cloud_tenant
+# - user_groups
+# - floating_ip
+# - graphql
+# - direct_connects
+# - cell
+# - recovery_plan_jobs
+# - app_runlogs
+# - docker_registry
+# - identity_categorization
+# - users
+# - rackable_unit
+# - file_store
+# - hosts
+# - versions
+# - tenants
+# - migrate
+# - physical_availability_zone
+# - batch
+# - mh_vm
+# - project
+# - directory_services_internal
+# - security_monitoring
+
+@base_url = https://{{pc-ip}}:9440/api/nutanix/v3
+
+### Get List of VMs
+# @name vms
+POST {{base_url}}/vms/list
+Authorization: Basic {{basic_auth_token}}
+
+{"kind": "vm"}
+
+### Get Categories
+# @name categories
+POST {{base_url}}/categories/list
+Authorization: Basic {{basic_auth_token}}
+
+{}
+
+### Get Prism Central Resources
+# @name prism_central
+GET {{base_url}}/prism_central
+Authorization: Basic {{basic_auth_token}}
+
+{}
+
+### Get Networks
+# @name networks
+POST {{base_url}}/subnets/list
+Authorization: Basic {{basic_auth_token}}
+
+{}
+
+@network_reference = {{networks.response.body.entities[0]}}
+
+
+### Get Images
+# @name images
+POST {{base_url}}/images/list
+Authorization: Basic {{basic_auth_token}}
+
+{}
+
+
+### Download Images
+curl --insecure --user admin:<> https://10.38.11.199:9440/api/nutanix/v3/images/38fd3327-ad79-426d-b50c-4265e38163bb/file --output CentOS7.qcow2

@@ -305,14 +305,14 @@ class KarbonCluster(Service):
             cred=NutanixCred
         )
 
-    @action
-    def ConfigureK8sServiceAccount(name="Configure K8s Service Account"):
-        CalmTask.Exec.ssh(
-            name="Configure K8s Service Account",
-            filename="../../_common/k8s/scripts/configure-sa-kubeconfig.sh",
-            target=ref(KarbonCluster),
-            cred=NutanixCred
-        )
+    # @action
+    # def ConfigureK8sServiceAccount(name="Configure K8s Service Account"):
+    #     CalmTask.Exec.ssh(
+    #         name="Configure K8s Service Account",
+    #         filename="../../_common/k8s/scripts/configure-sa-kubeconfig.sh",
+    #         target=ref(KarbonCluster),
+    #         cred=NutanixCred
+    #     )
 
     @action
     def ConfigureDynamicNFS(name="Configure Nutanix Files Storage Classes"):
@@ -437,7 +437,7 @@ class KarbonClusterPackage(Package):
         KarbonCluster.InstallKubernetesDashboard(name="Install Kubernetes Dashboard")
         KarbonCluster.InstallCertManager(name="Install Certificate Manager")
         KarbonCluster.InstallIngressNginx(name="Install Ingress Nginx")
-        KarbonCluster.ConfigureK8sServiceAccount(name="Configure K8s Service Account")
+        #KarbonCluster.ConfigureK8sServiceAccount(name="Configure K8s Service Account")
         KarbonCluster.ConfigureDynamicNFS(name="Configure Nutanix Files Dynamic Provisioner")
 
     @action

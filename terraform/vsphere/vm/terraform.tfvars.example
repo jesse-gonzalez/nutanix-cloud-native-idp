@@ -1,0 +1,38 @@
+##################################################################################
+# VARIABLES
+##################################################################################
+
+# Credentials
+
+vsphere_server   = "127.0.0.1"
+vsphere_username = "administrator@vsphere.local"
+vsphere_password = "************"
+vsphere_insecure = true
+
+# vSphere Settings
+
+vsphere_datacenter = "Datacenter"
+vsphere_cluster    = "Cluster1"
+vsphere_datastore  = "Default"
+vsphere_folder     = "templates"
+vsphere_network    = "VM Network"
+vsphere_template   = "windows-desktop-10-pro-v22.08-alpha"
+
+# Virtual Machines Settings
+
+vm_name                    = "windows-tf-desktop"
+vm_cpus                    = 2
+vm_memory                  = 4096
+vm_firmware                = "efi"
+vm_efi_secure_boot_enabled = true
+vm_hostname                = "windows-tf-desktop"
+vm_domain                  = "vsphere.local"
+vm_ipv4_address            = "192.168.0.10"
+vm_ipv4_netmask            = "24"
+vm_ipv4_gateway            = "192.168.0.1"
+vm_dns_suffix_list         = ["vsphere.local"]
+vm_dns_server_list         = ["192.168.0.4", "192.168.0.5"]
+domain                     = "vsphere.local"
+domain_admin_username      = "administrator@vsphere.local"
+domain_admin_password      = ""
+vm_admin_password          = ""

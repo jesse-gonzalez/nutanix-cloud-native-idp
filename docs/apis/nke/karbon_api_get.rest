@@ -1,0 +1,10 @@
+cat <<EOF | kubectl apply -f -
+apiVersion: kubeflow.org/v1
+kind: Profile
+metadata:
+    name: project1   # replace with the name of profile you want, this will be the user's namespace name
+spec:
+    owner:
+        kind: User
+        name: user2@example.com   # replace with the user email
+EOF

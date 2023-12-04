@@ -186,11 +186,11 @@ class Bastion_HostProfile(VmProfile):
         #     cred=NutanixCred
         # )
 
-        # CalmTask.Exec.ssh(
-        #     name="Install Kube PS1",
-        #     filename="../../_common/linux/scripts/install_kube-ps1.sh",
-        #     cred=NutanixCred
-        # )
+        CalmTask.Exec.ssh(
+            name="Install Kube PS1",
+            filename="../../_common/linux/scripts/install_kube-ps1.sh",
+            cred=NutanixCred
+        )
 
         # CalmTask.Exec.ssh(
         #     name="Install Kubectl Krew Package Manager",
@@ -342,11 +342,11 @@ class Bastion_HostProfile(VmProfile):
         #     cred=NutanixCred
         # )
 
-        CalmTask.Exec.ssh(
-            name="Install Kubie Cli",
-            filename="../../_common/linux/scripts/install_kubie.sh",
-            cred=NutanixCred
-        )
+        # CalmTask.Exec.ssh(
+        #     name="Install Kubie Cli",
+        #     filename="../../_common/linux/scripts/install_kubie.sh",
+        #     cred=NutanixCred
+        # )
 
     nutanix_public_key = CalmVariable.Simple.Secret(
         NutanixPublicKey,

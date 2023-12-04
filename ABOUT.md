@@ -14,20 +14,20 @@ Alternatively, having a space that is highly transient and ephemeral in nature l
 
 ![kalm-marketplace](docs/images/kalm-marketplace.png)
 
-### 1. Karbon [NKE] Focused - Helm Chart Marketplace
+### 1. NKE Focused - Helm Chart Marketplace
 
-Since this repository is highly focused on Nutanix Karbon and Calm integration, the goal was to be able to provide a means of deploying the respective Helm charts on any Karbon Cluster that is currently deployed into the respective Prism Central instance.  The only pre-requisite is that the running cluster already has MetalLB, Ingress and Cert-Manager.  Alternatively, one can demo the Calm blueprint that actually deploys the underlying Karbon cluster with all the pre-requisites already deployed / configured.
+Since this repository is highly focused on Nutanix NKE and Calm integration, the goal was to be able to provide a means of deploying the respective Helm charts on any NKE Cluster that is currently deployed into the respective Prism Central instance.  The only pre-requisite is that the running cluster already has MetalLB, Ingress and Cert-Manager.  Alternatively, one can demo the Calm blueprint that actually deploys the underlying NKE cluster with all the pre-requisites already deployed / configured.
 
 1. Curated list of Helm Chart Deployments of various cloud-native solutions (vetted as part of the CNCF) that have allowed us to quickly plug and play based on customer needs
 1. All Helm Chart Blueprints fully published to Calm Marketplace, with option to only create / publish each blueprint independently.
-1. Each Helm Chart is designed to be easily deployed onto any Karbon cluster, with HTTPS and Ingress fully configured using optional Wildcard DNS.
-1. In certain cases, Helm Charts are deployed and configured with advanced scenarios to demonstrate real world use cases. (i.e., Deploy JFrog Container Registry -> Configure Docker and Helm Repositories -> Configure Karbon Private Registry)
+1. Each Helm Chart is designed to be easily deployed onto any NKE cluster, with HTTPS and Ingress fully configured using optional Wildcard DNS.
+1. In certain cases, Helm Charts are deployed and configured with advanced scenarios to demonstrate real world use cases. (i.e., Deploy JFrog Container Registry -> Configure Docker and Helm Repositories -> Configure NKE Private Registry)
 
 ![kalm-marketplace_helm](docs/images/kalm-marketplace_helm.png)
 
-### 2. Karbon Cluster Deployment Blueprint
+### 2. NKE Cluster Deployment Blueprint
 
-The purpose of this blueprint was to demonstrate how customers can leverage Calm and the underlying Karbon APIs to easily Deploy either a Development and/or Production Cluster, while also laying down the base components needed to be productive with well-known karbon/kubernetes command line utilities with a development workstation and lastly, deploying the MetalLB, Cert-Manager and Ingress components needed for most underlying Helm Charts.
+The purpose of this blueprint was to demonstrate how customers can leverage Calm and the underlying NKE APIs to easily Deploy either a Development and/or Production Cluster, while also laying down the base components needed to be productive with well-known NKE/kubernetes command line utilities with a development workstation and lastly, deploying the MetalLB, Cert-Manager and Ingress components needed for most underlying Helm Charts.
 
 ![karbon-bp](docs/images/karbon-bp.png)
 

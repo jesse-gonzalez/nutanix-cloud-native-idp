@@ -3,7 +3,7 @@ helm_chart_instance_name = "github-runners"
 
 import os
 
-GITHUB_REPO_URL="https://github.com/jesse-gonzalez/cloud-native-calm.git"
+GITHUB_REPO_URL="https://github.com/jesse-gonzalez/nutanix-cloud-native-idp.git"
 
 variable_list = [
     { "value": { "value": os.getenv("DOMAIN_NAME") }, "context": "Default", "name": "domain_name" },

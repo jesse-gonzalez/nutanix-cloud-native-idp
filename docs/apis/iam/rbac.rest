@@ -1,0 +1,27 @@
+### GET roles
+# @name roles
+GET https://{{pc-ip}}:9440/api/iam/v4.0.b1/authz/roles
+Authorization: Basic {{basic_auth_token}}
+
+
+
+### Get role
+# @name role
+GET https://{{pc-ip}}:9440/api/iam/v4.0.b1/authz/roles/ba748678-97e1-49e0-b103-1553cc5a44ce
+Authorization: Basic {{basic_auth_token}}
+
+
+### Create role
+# @name create_role
+GET https://{{pc-ip}}:9440/api/iam/v4.0.b1/authz/roles
+Authorization: Basic {{basic_auth_token}}
+
+{
+  "tenantId": "string",
+  "displayName": "Cloud Native Admin",
+  "description": "Cloud Native Admin Role",
+  "operations": [
+    "???"
+  ]
+
+}

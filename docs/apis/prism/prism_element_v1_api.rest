@@ -1,0 +1,58 @@
+## 1. .rest files require rest client vscode extension.
+## 2. get basic auth token `echo -n admin:nutanix/4u | base64`
+## 3. update rest-client.enviornmentVariables and rest-client.defaultHeaders in vscode settings.json
+# "rest-client.environmentVariables": {
+#   "kalm-main-11-1": {
+#     "pe_ip": "10.38.11.7",
+#     "pc_ip": "10.38.11.9",
+#     "basic_auth_token": "admin:nutanix/4u",
+#     "karbon_cluster_name": "kalm-main-11-1"
+#   }
+# },
+# "rest-client.defaultHeaders": {
+#    "User-Agent": "vscode-restclient",
+#    "Content-Type": "application/json"
+# },
+## 4. easily switch between environments via command palette Rest Client: Switch Environment  (ctrl-shift-P)
+## 5. send request via command palette option Rest Client: Send Request (ctrl-shift-P)
+
+# - v1.0 Options
+# - alerts
+# - authconfig
+# - cloud
+# - cluster
+# - clusters
+# - containers
+# - data_at_rest_encryption
+# - data_at_rest_encryption_certificates
+# - disks
+# - events
+# - file_groups
+# - health_checks
+# - hosts
+# - http_proxies
+# - key_management_servers
+# - license
+# - protection_domains
+# - remote_sites
+# - rsyslog
+# - snmp
+# - storage_pools
+# - users
+# - vdisks
+# - vfilers
+# - virtual_disks
+# - vms
+# - vstores
+
+@base_url = https://{{pe_ip}}:9440/PrismGateway/services/rest/v1
+
+### Get a list of KVM managed Virtual Machines.
+# @name vms
+GET {{base_url}}/vms?count=1
+Authorization: Basic {{basic_auth_token}}
+
+### Get a list of storage containers
+# @name containers
+GET {{base_url}}/containers
+Authorization: Basic {{basic_auth_token}}

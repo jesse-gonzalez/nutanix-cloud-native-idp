@@ -210,7 +210,7 @@ class Default(Profile):
         is_mandatory=True,
         is_hidden=False,
         runtime=True,
-        description="Target Github Repo URL where Runners will be configure - i.e., https://github.com/jesse-gonzalez/cloud-native-calm.git",
+        description="Target Github Repo URL where Runners will be configure - i.e., https://github.com/jesse-gonzalez/nutanix-cloud-native-idp.git",
     )
 
     k8s_cluster_name = CalmVariable.WithOptions.FromTask(

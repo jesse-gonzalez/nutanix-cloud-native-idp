@@ -1,0 +1,14 @@
+
+
+POST https://central-stackrox.apps.kalm-main-12-1-ocp.ncnlabs.ninja/v1/apitokens/generate
+Authorization: Basic {{basic_auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "role": "Admin"
+}
+
+###
+GET https://central-stackrox.apps.kalm-main-12-1-ocp.ncnlabs.ninja/v1/apitokens
+Authorization: Basic {{basic_auth_token}}

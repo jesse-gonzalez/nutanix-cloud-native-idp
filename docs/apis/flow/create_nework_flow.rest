@@ -1,0 +1,71 @@
+###  
+# @name subnets
+POST https://{{pc-ip}}:9440/api/nutanix/v3/subnets/list
+Authorization: Basic {{basic_auth_token}}
+
+{
+  "filter": "name==Primary"
+}
+
+
+### Get Subnet and CIDR of network
+
+@subnet_ip = {{subnets.response.body.entities[0].status.resources.ip_config.subnet_ip}}
+@cidr = {{subnets.response.body.entities[0].status.resources.ip_config.prefix_length}}
+
+@machine_network = "{{subnet_ip}}/{{cidr}}"
+
+###
+@total_matches_count = {{subnets.response.body.metadata.total_matches}}
+
+
+### Get Project UUID
+
+### Get Cluster Reference
+
+
+### Create Subnet
+# @name subnet
+POST https://{{pc-ip}}:9440/api/nutanix/v3/subnets
+Authorization: Basic {{basic_auth_token}}
+
+{
+  "metadata": {
+    "project_reference": {
+      "uuid": "string"
+    },
+    "should_force_translate": true
+  },
+  "spec": {
+        "name": "Primary",
+        "resources": {
+          "vswitch_name": "br0",
+          "subnet_type": "VLAN",
+          "ip_config": {
+            "default_gateway_ip": "10.38.14.1",
+            "dhcp_server_address": {
+              "ip": "10.38.14.62"
+            },
+            "pool_list": [
+              {
+                "range": "10.38.14.31 10.38.14.61"
+              }
+            ],
+            "prefix_length": 26,
+            "subnet_ip": "10.38.14.0",
+            "dhcp_options": {
+              "domain_name_server_list": [
+                "10.38.14.11"
+              ]
+            }
+          },
+          "vlan_id": 0,
+        },
+        "cluster_reference": {
+          "kind": "cluster",
+          "name": "PHX-SPOC014-1",
+          "uuid": "0005f29e-6670-64cb-030a-ac1f6b6e540c"
+        }
+      }
+    }
+}

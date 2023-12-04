@@ -1,0 +1,17 @@
+### Set endpoint
+@contentType = application/json
+@accept = application/json
+@base_url = https://{{pc-ip}}:9440/
+
+## Set Variables
+
+@vm_name = User01-MSSQLSource
+
+### Get VMs
+# @name vms
+GET {{base_url}}/api/vmm/v4.0.a1/ahv/config/vms?$limit=50&page=0
+Authorization: Basic {{basic_auth_token}}
+
+## vm_uuid = {{vms.response.body.data[0].name}}
+
+##?&$filter=name eq '{{vm_name}}'

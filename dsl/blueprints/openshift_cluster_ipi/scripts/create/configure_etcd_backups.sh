@@ -106,4 +106,4 @@ EOF
 kubectl create job etcd-backup-baseline --from=cronjob/openshift-backup -n ocp-etcd-backup --dry-run=client -o yaml | kubectl apply -f -
 
 ## monitor job completion
-kubectl wait --for=condition=complete --timeout=5m job/etcd-backup-baseline -n ocp-etcd-backup 
+##kubectl wait --for=condition=complete --timeout=5m job/etcd-backup-baseline -n ocp-etcd-backup 

@@ -1,6 +1,6 @@
-[![cloud-native-calm-builds](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/cloud-native-calm-build.yml/badge.svg)](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/cloud-native-calm-build.yml)
-[![devcontainer-cicd-build](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/devcontainer-cicd-build.yml/badge.svg)](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/devcontainer-cicd-build.yml) [![git-guardian-security-checks](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/gitguardian.yaml/badge.svg)](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/gitguardian.yaml)
-[![ntnx-ocp-cloud-native-build](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/ntnx-ocp-cloud-native-build.yml/badge.svg)](https://github.com/jesse-gonzalez/cloud-native-calm/actions/workflows/ntnx-ocp-cloud-native-build.yml)
+[![nutanix-cloud-native-idp-builds](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/nutanix-cloud-native-idp-build.yml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/nutanix-cloud-native-idp-build.yml)
+[![devcontainer-cicd-build](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/devcontainer-cicd-build.yml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/devcontainer-cicd-build.yml) [![git-guardian-security-checks](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/gitguardian.yaml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/gitguardian.yaml)
+[![ntnx-ocp-cloud-native-build](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/ntnx-ocp-cloud-native-build.yml/badge.svg)](https://github.com/jesse-gonzalez/nutanix-cloud-native-idp/actions/workflows/ntnx-ocp-cloud-native-build.yml)
 
 # Cloud-Native with Nutanix Self-Service and Kubernetes
 
@@ -9,12 +9,12 @@ This repo is for showcasing Nutanix Self-Service and Kubernetes capabilities onl
 ## Minimum Nutanix Cluster Pre-Requisites
 
 - Nutanix Prism Central with the following services enabled:
-  - Nutanix Calm 3.4+ (aka Self-Service)
-  - Nutanix Karbon 2.4+ (aka Nutanix Kubernetes Engine)
+  - Nutanix Self-Service 3.5+ (aka Self-Service)
+  - Nutanix NKE 2.8+ (aka Nutanix Kubernetes Engine)
   - [Optional] Nutanix Objects with S3 User/Access Key Generated
     - only required for various use cases - like Kasten, Terraform, Rancher ETCD Backups, MongoDB OpsManager Backups, etc.
 - Nutanix AHV Cluster
-  - required for Karbon Deployment
+  - required for NKE Deployment
 - [Optional] vSphere/vCenter Endpoint
   - required for Packer/Terraform Workflows, mostly)
 - [Optional] Nutanix Files Server with NFS Protocol Enabled
@@ -51,8 +51,8 @@ This repo is for showcasing Nutanix Self-Service and Kubernetes capabilities onl
 1. Clone repo and change directory (cd):
 
   ```bash
-    git clone https://github.com/jesse-gonzalez/cloud-native-calm
-    cd cloud-native-calm
+    git clone https://github.com/jesse-gonzalez/nutanix-cloud-native-idp
+    cd nutanix-cloud-native-idp
   ```
 
 1. If leveraging `vscode`, select option to `Reopen with Container` from `Command Palette`.
@@ -199,3 +199,4 @@ If you need to re-run the procedures due to failure or just wish to cleanup envi
 ### Setting VSCODE Terminal Title
 
 1. set vscode settings for `terminal.integrated.tabs.title` to `${process}${separator}${sequence}` if you want to see environment name in terminal title
+

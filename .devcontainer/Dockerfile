@@ -1,5 +1,5 @@
 # Download Calm DSL latest from hub.docker.com
-FROM ntnx/calm-dsl:v3.6.1
+FROM ntnx/calm-dsl:v3.5.2
 
 LABEL org.opencontainers.image.title="nutanix-cloud-native-utils"
 LABEL org.opencontainers.image.description="Cloud Native Utils built on top of Nutanix Calm DSL BASE"
